@@ -9,7 +9,7 @@ import { configSchema } from '../../../src/config/schema.js'
 describe('configSchema', () => {
   it('parses with defaults when given empty object', () => {
     const result = configSchema.parse({})
-    expect(result.server).toBe('https://webapi.swiftkanban.com')
+    expect(result.server).toBe('https://login.swiftkanban.com')
     expect(result.format).toBe('json')
     expect(result.token).toBeUndefined()
   })

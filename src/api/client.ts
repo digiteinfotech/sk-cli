@@ -42,7 +42,7 @@ export class RestClient {
       'Accept': 'application/json',
     }
     if (this.token) {
-      headers['Authorization'] = `Bearer ${this.token}`
+      headers['AuthorizationToken'] = this.token
     }
     return headers
   }

@@ -2,6 +2,7 @@ import { Command } from 'commander'
 import { registerBoardsCommand } from './boards.js'
 import { registerCardsCommand } from './cards.js'
 import { registerConfigCommand } from './config-cmd.js'
+import { registerLoginCommand } from './login.js'
 
 export function createProgram(): Command {
   const program = new Command()
@@ -15,6 +16,7 @@ export function createProgram(): Command {
     .option('--token <token>', 'Auth token (JWT)')
     .option('--verbose', 'Enable debug logging to stderr')
 
+  registerLoginCommand(program)
   registerConfigCommand(program)
   registerBoardsCommand(program)
   registerCardsCommand(program)

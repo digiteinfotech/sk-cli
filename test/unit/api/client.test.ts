@@ -24,7 +24,7 @@ describe('RestClient', () => {
   it('makes GET requests with auth header', async () => {
     server.use(
       http.get(`${BASE_URL}/api/boards`, ({ request }) => {
-        expect(request.headers.get('Authorization')).toBe('Bearer test-token')
+        expect(request.headers.get('AuthorizationToken')).toBe('test-token')
         return HttpResponse.json([{ id: '1', name: 'Board 1' }])
       }),
     )
@@ -80,7 +80,7 @@ describe('RestClient', () => {
   it('sends requests without auth when no token', async () => {
     server.use(
       http.get(`${BASE_URL}/api/boards`, ({ request }) => {
-        expect(request.headers.get('Authorization')).toBeNull()
+        expect(request.headers.get('AuthorizationToken')).toBeNull()
         return HttpResponse.json([])
       }),
     )

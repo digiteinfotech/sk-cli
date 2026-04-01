@@ -3,11 +3,21 @@
 ## REST Client
 
 All HTTP calls go through `src/api/client.ts` which handles:
-- Auth header injection (`Authorization: Bearer <token>`)
-- Base URL resolution
+- Auth header injection (`AuthorizationToken: <jwt>` — NOT `Authorization: Bearer`)
+- Base URL resolution (default: `https://login.swiftkanban.com`)
+- All API paths use `/restapi/` prefix (e.g., `/restapi/board-operations/boards`)
 - Error normalization into `ApiError` class
 - Retry on 429 (rate limit) and 5xx with exponential backoff (max 3 retries)
 - 30-second request timeout
+
+## Authentication
+
+Login is handled by `src/services/auth.ts`, invoked via `sk login`:
+- Endpoint: `POST /restapi/secured/auth`
+- Content-Type: `text/plain` (unusual — body is JSON-as-plain-text)
+- Body: `{"AuthenticationToken":"SwiftKanban <base64(user:password)>"}`
+- Response JWT at: `response.Response.details.authDetails.AuthorizationToken`
+- Requires "Integration User" role on the SwiftKanban account
 
 ## Adding a New Endpoint
 

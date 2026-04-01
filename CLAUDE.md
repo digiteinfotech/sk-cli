@@ -34,9 +34,13 @@ The service layer is intentionally separated so it can be wrapped as an MCP serv
 
 ## API Details
 
-- **Base URL:** `https://webapi.swiftkanban.com/api`
-- **Auth:** JWT Bearer token (no expiry)
-- **Swagger:** https://login.swiftkanban.com/swift-api-doc/
+- **Default Server:** `https://login.swiftkanban.com` (also works: `https://webapi.swiftkanban.com`)
+- **Base Path:** `/restapi/` (NOT `/api/`)
+- **Auth Header:** `AuthorizationToken: <jwt>` (NOT `Authorization: Bearer`)
+- **Auth Endpoint:** `POST /restapi/secured/auth` (Content-Type: `text/plain`, body: `{"AuthenticationToken":"SwiftKanban <base64(user:pass)>"}`)
+- **Token:** JWT with no expiry; requires "Integration User" role on the SwiftKanban account
+- **OpenAPI Spec:** `https://login.swiftkanban.com/restapi/openapi.json`
+- **Swagger UI:** https://login.swiftkanban.com/swift-api-doc/
 - **Docs:** https://www.nimblework.com/knowledge-base/swiftkanban/article-category/web-services-api-documentation/
 
 ## Output Convention
