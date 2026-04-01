@@ -1,7 +1,7 @@
 import { defineConfig } from 'tsup'
 
 export default defineConfig({
-  entry: ['bin/sk.ts'],
+  entry: ['bin/sk.ts', 'bin/sk-mcp.ts'],
   format: ['esm'],
   target: 'node22',
   outDir: 'dist',

@@ -1,14 +1,21 @@
 {
   "name": "sk-cli",
   "version": "0.1.0",
-  "description": "SwiftKanban CLI — interact with SwiftKanban from the command line",
+  "description": "SwiftKanban CLI and MCP server — interact with SwiftKanban from the command line or Claude AI",
   "type": "module",
   "bin": {
-    "sk": "./dist/sk.js"
+    "sk": "./dist/sk.js",
+    "sk-mcp": "./dist/sk-mcp.js"
   },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "build": "tsup",
     "dev": "tsx bin/sk.ts",
+    "dev:mcp": "tsx bin/sk-mcp.ts",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:integration": "SK_INTEGRATION_TEST=1 vitest run test/integration",
@@ -21,11 +28,15 @@
   "keywords": [
     "swiftkanban",
     "kanban",
-    "cli"
+    "cli",
+    "mcp",
+    "claude",
+    "ai",
+    "model-context-protocol"
   ],
-  "license": "UNLICENSED",
-  "private": true,
+  "license": "MIT",
   "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
     "cli-table3": "^0.6.5",
     "commander": "^14.0.3",
     "zod": "^4.3.6"

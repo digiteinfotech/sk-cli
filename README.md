@@ -1,26 +1,20 @@
-# sk — SwiftKanban CLI
+# sk — SwiftKanban CLI & MCP Server
 
-A command-line interface for [SwiftKanban](https://www.nimblework.com/products/swiftkanban/) that lets you manage boards, cards, and more from your terminal. Designed for both human and AI (Claude) usage — all output is structured JSON by default.
+A command-line interface and [MCP server](https://modelcontextprotocol.io/) for [SwiftKanban](https://www.nimblework.com/products/swiftkanban/). Manage boards, cards, and more from your terminal or through Claude AI.
 
 ## Installation
 
 ```bash
-# Clone and install
-git clone <repo-url> sk-cli
-cd sk-cli
-npm install
-
-# Build
-npm run build
-
-# Link globally (makes `sk` available everywhere)
-npm link
+npm install -g sk-cli
 ```
 
-For development without building:
+Or from source:
 
 ```bash
-npx tsx bin/sk.ts <command>
+git clone <repo-url> sk-cli
+cd sk-cli
+npm install && npm run build
+npm link
 ```
 
 ## Configuration
@@ -236,22 +230,59 @@ sk config set format table
 | `2` | Server error (5xx, timeout) |
 | `3` | Configuration error (missing token, bad config) |
 
-## Using with Claude
+## MCP Server (Claude AI Integration)
 
-`sk` is designed as a tool for Claude (AI agent). Claude can:
+sk-cli includes an MCP server that lets Claude interact with SwiftKanban directly.
 
-```bash
-# List boards and pick one
-sk boards list
+### Claude Desktop
 
-# Create a card from structured data
-sk cards --board-id BOARD-1 create --json '{"title": "Implement auth", "description": "Add JWT authentication to the API", "columnId": "BACKLOG"}'
+Add to your `claude_desktop_config.json`:
 
-# Check card status
-sk cards --board-id BOARD-1 get CARD-789
+```json
+{
+  "mcpServers": {
+    "swiftkanban": {
+      "command": "sk-mcp",
+      "env": {
+        "SK_TOKEN": "your-jwt-token",
+        "SK_SERVER": "https://login.swiftkanban.com"
+      }
+    }
+  }
+}
 ```
 
-All output is machine-parseable JSON, and errors are structured with codes for programmatic handling.
+Or without global install:
+
+```json
+{
+  "mcpServers": {
+    "swiftkanban": {
+      "command": "npx",
+      "args": ["-y", "sk-cli", "sk-mcp"],
+      "env": {
+        "SK_TOKEN": "your-jwt-token"
+      }
+    }
+  }
+}
+```
+
+### Available MCP Tools
+
+| Tool | Description |
+|---|---|
+| `login` | Authenticate with email/password, saves token |
+| `get_config` | Show current configuration |
+| `list_boards` | List all accessible boards |
+| `get_board` | Get board details |
+| `list_cards` | List cards on a board |
+| `get_card` | Get card details (use `CardCode:id` format) |
+| `create_card` | Create a new card |
+| `update_card` | Update an existing card |
+| `delete_card` | Delete a card |
+
+All tools that require `board_id` will fall back to the `SK_BOARD_ID` env var if not provided.
 
 ## Development
 
@@ -279,10 +310,12 @@ npm run lint
 
 ```
 sk-cli/
-├── bin/sk.ts              # Entry point
+├── bin/
+│   ├── sk.ts              # CLI entry point
+│   └── sk-mcp.ts          # MCP server entry point
 ├── src/
 │   ├── cli/               # Command definitions (Commander.js)
-│   ├── services/          # Business logic (reusable by future MCP server)
+│   ├── services/          # Business logic (shared by CLI + MCP)
 │   ├── api/               # REST client, types, auth
 │   ├── config/            # Config loading (CLI > env > file)
 │   └── output/            # JSON/table formatting
@@ -305,4 +338,4 @@ Use the Claude Code skills:
 
 ## License
 
-UNLICENSED — Internal use only.
+MIT

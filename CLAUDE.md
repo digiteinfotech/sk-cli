@@ -1,13 +1,14 @@
-# SK-CLI — SwiftKanban Command-Line Interface
+# SK-CLI — SwiftKanban CLI & MCP Server
 
-A TypeScript CLI for interacting with the SwiftKanban REST API, designed for both human and AI (Claude) usage.
+A TypeScript CLI and MCP server for interacting with the SwiftKanban REST API, designed for both human and AI (Claude) usage.
 
 ## Quick Reference
 
 ```bash
-npm run build          # Build with tsup
+npm run build          # Build with tsup (both CLI + MCP)
 npm test               # Run tests with vitest
 npx tsx bin/sk.ts      # Run CLI in development
+npx tsx bin/sk-mcp.ts  # Run MCP server in development
 ```
 
 ## Tech Stack
@@ -15,22 +16,24 @@ npx tsx bin/sk.ts      # Run CLI in development
 - **Language:** TypeScript (strict mode, ESM)
 - **Runtime:** Node.js v24
 - **CLI Framework:** Commander.js
+- **MCP:** @modelcontextprotocol/sdk (stdio transport)
 - **HTTP:** Built-in fetch (Node 24)
 - **Validation:** zod
 - **Testing:** vitest + msw
-- **Build:** tsup (esbuild)
+- **Build:** tsup (esbuild, two entry points)
 
 ## Architecture
 
 ```
-CLI Layer (src/cli/)        ← Commander commands, thin wrappers
+CLI Layer (bin/sk.ts → src/cli/)         ← Commander commands, thin wrappers
+MCP Layer (bin/sk-mcp.ts)                ← MCP tools, thin wrappers
+    ↓                    ↓
+Service Layer (src/services/)            ← Business logic, shared by CLI + MCP
     ↓
-Service Layer (src/services/) ← Business logic, reusable by future MCP server
-    ↓
-API Client (src/api/)       ← HTTP client, auth, error handling
+API Client (src/api/)                    ← HTTP client, auth, error handling
 ```
 
-The service layer is intentionally separated so it can be wrapped as an MCP server later without changing business logic.
+The service layer is shared by both the CLI and MCP server — no business logic duplication.
 
 ## API Details
 
