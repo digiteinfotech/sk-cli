@@ -28,3 +28,9 @@ coverage/
 # Logs
 *.log
 npm-debug.log*
+
+# MCP Registry tokens
+.mcpregistry_*
+
+# npm pack output
+*.tgz
