@@ -236,7 +236,32 @@ sk config set format table
 
 sk-cli includes an MCP server that lets Claude interact with SwiftKanban directly.
 
-### Claude Desktop
+### Setup
+
+**1. Install the package:**
+
+```bash
+npm install -g @nimblework/sk-cli
+```
+
+**2. Get your auth token** by logging in:
+
+```bash
+sk login --user you@example.com --password yourpassword
+```
+
+The token is saved to `~/.config/sk-cli/config.json`. Copy it for the next step.
+
+**3. Find the full path to `sk-mcp`:**
+
+Claude Desktop does not inherit your shell PATH, so you must use the absolute path to `sk-mcp`.
+
+```bash
+which sk-mcp
+# e.g., /Users/you/.npm-global/bin/sk-mcp
+```
+
+**4. Configure Claude Desktop**
 
 Add to your `claude_desktop_config.json`:
 
@@ -244,7 +269,7 @@ Add to your `claude_desktop_config.json`:
 {
   "mcpServers": {
     "swiftkanban": {
-      "command": "sk-mcp",
+      "command": "/full/path/to/sk-mcp",
       "env": {
         "SK_TOKEN": "your-jwt-token",
         "SK_SERVER": "https://login.swiftkanban.com"
@@ -254,21 +279,9 @@ Add to your `claude_desktop_config.json`:
 }
 ```
 
-Or without global install:
+Replace `/full/path/to/sk-mcp` with the output from step 3, and `your-jwt-token` with the token from step 2.
 
-```json
-{
-  "mcpServers": {
-    "swiftkanban": {
-      "command": "npx",
-      "args": ["-y", "@nimblework/sk-cli", "sk-mcp"],
-      "env": {
-        "SK_TOKEN": "your-jwt-token"
-      }
-    }
-  }
-}
-```
+**5. Restart Claude Desktop** to pick up the new config.
 
 ### Available MCP Tools
 
