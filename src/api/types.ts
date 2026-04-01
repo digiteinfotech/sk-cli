@@ -14,12 +14,29 @@ export class ApiError extends Error {
   }
 }
 
+// --- SwiftKanban response envelope ---
+
+export const skResponseSchema = z.object({
+  Response: z.object({
+    details: z.record(z.string(), z.unknown()),
+    messageView: z.object({
+      type: z.string(),
+      message: z.array(z.string()).optional(),
+    }),
+  }),
+})
+
+export type SkResponse = z.infer<typeof skResponseSchema>
+
 // --- Board types ---
 
 export const boardSchema = z.object({
-  id: z.string(),
-  name: z.string(),
-  description: z.string().optional(),
+  boardId: z.string(),
+  projectName: z.string(),
+  currentState: z.string().optional(),
+  ownerOrg: z.string().optional(),
+  createdDate: z.string().optional(),
+  modifiedDate: z.string().optional(),
 }).passthrough()
 
 export type Board = z.infer<typeof boardSchema>
@@ -30,11 +47,20 @@ export const boardListSchema = z.array(boardSchema)
 
 export const cardSchema = z.object({
   id: z.string(),
-  title: z.string(),
+  name: z.string(),
+  cardNumber: z.string().optional(),
+  workType: z.string().optional(),
   description: z.string().optional(),
-  columnId: z.string().optional(),
-  swimlaneId: z.string().optional(),
-  assignedTo: z.string().optional(),
+  currentQueue: z.string().optional(),
+  currentQueueId: z.string().optional(),
+  currentSwimName: z.string().optional(),
+  currentSwimId: z.string().optional(),
+  currentOwner: z.string().optional(),
+  currentState: z.string().optional(),
+  priority: z.string().optional(),
+  cardSize: z.string().optional(),
+  createdDate: z.string().optional(),
+  modifiedDate: z.string().optional(),
 }).passthrough()
 
 export type Card = z.infer<typeof cardSchema>
@@ -42,15 +68,13 @@ export type Card = z.infer<typeof cardSchema>
 export const cardListSchema = z.array(cardSchema)
 
 export interface CreateCardInput {
-  title: string
+  name: string
   description?: string
-  swimlaneId?: string
-  columnId?: string
   [key: string]: unknown
 }
 
 export interface UpdateCardInput {
-  title?: string
+  name?: string
   description?: string
   [key: string]: unknown
 }

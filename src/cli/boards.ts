@@ -6,8 +6,8 @@ import { output, success, type Format, type TableConfig } from '../output/format
 import { listBoards, getBoard } from '../services/boards.js'
 
 const boardTableConfig: TableConfig = {
-  headers: ['ID', 'Name', 'Description'],
-  row: (board) => [String(board.id ?? ''), String(board.name ?? ''), String(board.description ?? '')],
+  headers: ['Board ID', 'Name', 'State'],
+  row: (board) => [String(board.boardId ?? ''), String(board.projectName ?? ''), String(board.currentState ?? '')],
 }
 
 export function registerBoardsCommand(program: Command): void {

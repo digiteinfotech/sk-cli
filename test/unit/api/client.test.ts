@@ -23,41 +23,41 @@ function createClient(token?: string) {
 describe('RestClient', () => {
   it('makes GET requests with auth header', async () => {
     server.use(
-      http.get(`${BASE_URL}/api/boards`, ({ request }) => {
+      http.get(`${BASE_URL}/restapi/board-operations/boards`, ({ request }) => {
         expect(request.headers.get('AuthorizationToken')).toBe('test-token')
-        return HttpResponse.json([{ id: '1', name: 'Board 1' }])
+        return HttpResponse.json({ Response: { details: { board: [] }, messageView: { type: 'success' } } })
       }),
     )
 
     const client = createClient('test-token')
-    const result = await client.get('/api/boards')
-    expect(result).toEqual([{ id: '1', name: 'Board 1' }])
+    const result = await client.get('/restapi/board-operations/boards')
+    expect(result).toEqual({ Response: { details: { board: [] }, messageView: { type: 'success' } } })
   })
 
   it('makes POST requests with body', async () => {
     server.use(
-      http.post(`${BASE_URL}/api/boardcards`, async ({ request }) => {
+      http.post(`${BASE_URL}/restapi/card-operations/boards/B1/cards`, async ({ request }) => {
         const body = await request.json()
-        expect(body).toEqual({ title: 'New Card', boardId: 'B1' })
-        return HttpResponse.json({ id: 'C1', title: 'New Card' })
+        expect(body).toEqual({ name: 'New Card' })
+        return HttpResponse.json({ Response: { details: { cardDetails: { id: 'C1', name: 'New Card' } }, messageView: { type: 'success' } } })
       }),
     )
 
     const client = createClient('test-token')
-    const result = await client.post('/api/boardcards', { title: 'New Card', boardId: 'B1' })
-    expect(result).toEqual({ id: 'C1', title: 'New Card' })
+    const result = await client.post('/restapi/card-operations/boards/B1/cards', { name: 'New Card' })
+    expect(result).toEqual({ Response: { details: { cardDetails: { id: 'C1', name: 'New Card' } }, messageView: { type: 'success' } } })
   })
 
   it('throws ApiError on 401', async () => {
     server.use(
-      http.get(`${BASE_URL}/api/boards`, () => {
+      http.get(`${BASE_URL}/restapi/board-operations/boards`, () => {
         return new HttpResponse(null, { status: 401 })
       }),
     )
 
     const client = createClient('bad-token')
-    await expect(client.get('/api/boards')).rejects.toThrow(ApiError)
-    await expect(client.get('/api/boards')).rejects.toMatchObject({
+    await expect(client.get('/restapi/board-operations/boards')).rejects.toThrow(ApiError)
+    await expect(client.get('/restapi/board-operations/boards')).rejects.toMatchObject({
       code: 'AUTH_FAILED',
       status: 401,
     })
@@ -65,13 +65,13 @@ describe('RestClient', () => {
 
   it('throws ApiError on 404', async () => {
     server.use(
-      http.get(`${BASE_URL}/api/boards/nonexistent`, () => {
+      http.get(`${BASE_URL}/restapi/board-operations/boards/nonexistent`, () => {
         return new HttpResponse(null, { status: 404 })
       }),
     )
 
     const client = createClient('test-token')
-    await expect(client.get('/api/boards/nonexistent')).rejects.toMatchObject({
+    await expect(client.get('/restapi/board-operations/boards/nonexistent')).rejects.toMatchObject({
       code: 'NOT_FOUND',
       status: 404,
     })
@@ -79,14 +79,14 @@ describe('RestClient', () => {
 
   it('sends requests without auth when no token', async () => {
     server.use(
-      http.get(`${BASE_URL}/api/boards`, ({ request }) => {
+      http.get(`${BASE_URL}/restapi/board-operations/boards`, ({ request }) => {
         expect(request.headers.get('AuthorizationToken')).toBeNull()
-        return HttpResponse.json([])
+        return HttpResponse.json({ Response: { details: { board: [] }, messageView: { type: 'success' } } })
       }),
     )
 
     const client = createClient()
-    const result = await client.get('/api/boards')
-    expect(result).toEqual([])
+    const result = await client.get('/restapi/board-operations/boards')
+    expect(result).toEqual({ Response: { details: { board: [] }, messageView: { type: 'success' } } })
   })
 })

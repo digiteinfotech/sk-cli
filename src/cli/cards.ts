@@ -7,13 +7,15 @@ import { output, outputJson, success, type Format, type TableConfig } from '../o
 import { listCards, getCard, createCard, updateCard, deleteCard } from '../services/cards.js'
 
 const cardTableConfig: TableConfig = {
-  headers: ['ID', 'Title', 'Column', 'Lane', 'Assigned To'],
+  headers: ['ID', 'Card #', 'Name', 'Queue', 'Lane', 'Owner', 'State'],
   row: (card) => [
     String(card.id ?? ''),
-    String(card.title ?? ''),
-    String(card.columnId ?? ''),
-    String(card.swimlaneId ?? ''),
-    String(card.assignedTo ?? ''),
+    String(card.cardNumber ?? ''),
+    String(card.name ?? ''),
+    String(card.currentQueue ?? ''),
+    String(card.currentSwimName ?? ''),
+    String(card.currentOwner ?? ''),
+    String(card.currentState ?? ''),
   ],
 }
 
@@ -66,7 +68,8 @@ export function registerCardsCommand(program: Command): void {
         const localOpts = cards.opts() as { boardId?: string }
         const config = resolveConfig(globalOpts)
         const client = new RestClient(config)
-        const data = await getCard(client, cardId, localOpts.boardId ?? config.defaultBoardId)
+        const boardId = requireBoardId({ ...globalOpts, ...localOpts }, config)
+        const data = await getCard(client, boardId, cardId)
         output(globalOpts.format ?? config.format, success(data), cardTableConfig)
       } catch (error) {
         handleError(error)
@@ -76,10 +79,8 @@ export function registerCardsCommand(program: Command): void {
   cards
     .command('create')
     .description('Create a new card')
-    .requiredOption('--title <title>', 'Card title')
+    .requiredOption('--name <name>', 'Card name')
     .option('--description <desc>', 'Card description')
-    .option('--lane <lane>', 'Swimlane ID')
-    .option('--column <column>', 'Column ID')
     .option('--json <payload>', 'Full JSON payload (overrides other flags)')
     .action(async (cmdOpts) => {
       try {
@@ -94,14 +95,12 @@ export function registerCardsCommand(program: Command): void {
           input = JSON.parse(cmdOpts.json)
         } else {
           input = {
-            title: cmdOpts.title,
+            name: cmdOpts.name,
             ...(cmdOpts.description && { description: cmdOpts.description }),
-            ...(cmdOpts.lane && { swimlaneId: cmdOpts.lane }),
-            ...(cmdOpts.column && { columnId: cmdOpts.column }),
           }
         }
 
-        const data = await createCard(client, { ...input, boardId, title: input.title as string })
+        const data = await createCard(client, boardId, { ...input, name: input.name as string })
         output(globalOpts.format ?? config.format, success(data), cardTableConfig)
       } catch (error) {
         handleError(error)
@@ -112,26 +111,28 @@ export function registerCardsCommand(program: Command): void {
     .command('update')
     .description('Update an existing card')
     .argument('<card-id>', 'Card ID')
-    .option('--title <title>', 'New title')
+    .option('--name <name>', 'New name')
     .option('--description <desc>', 'New description')
     .option('--json <payload>', 'Full JSON payload (overrides other flags)')
     .action(async (cardId: string, cmdOpts) => {
       try {
         const globalOpts = program.opts() as CliOverrides & { format?: Format }
+        const localOpts = cards.opts() as { boardId?: string }
         const config = resolveConfig(globalOpts)
         const client = new RestClient(config)
+        const boardId = requireBoardId({ ...globalOpts, ...localOpts }, config)
 
         let input: Record<string, unknown>
         if (cmdOpts.json) {
           input = JSON.parse(cmdOpts.json)
         } else {
           input = {
-            ...(cmdOpts.title && { title: cmdOpts.title }),
+            ...(cmdOpts.name && { name: cmdOpts.name }),
             ...(cmdOpts.description && { description: cmdOpts.description }),
           }
         }
 
-        const data = await updateCard(client, cardId, input)
+        const data = await updateCard(client, boardId, cardId, input)
         output(globalOpts.format ?? config.format, success(data), cardTableConfig)
       } catch (error) {
         handleError(error)
@@ -145,9 +146,11 @@ export function registerCardsCommand(program: Command): void {
     .action(async (cardId: string) => {
       try {
         const globalOpts = program.opts() as CliOverrides & { format?: Format }
+        const localOpts = cards.opts() as { boardId?: string }
         const config = resolveConfig(globalOpts)
         const client = new RestClient(config)
-        await deleteCard(client, cardId)
+        const boardId = requireBoardId({ ...globalOpts, ...localOpts }, config)
+        await deleteCard(client, boardId, cardId)
         outputJson(success({ deleted: cardId }))
       } catch (error) {
         handleError(error)
