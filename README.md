@@ -25,29 +25,51 @@ npx tsx bin/sk.ts <command>
 
 ## Configuration
 
-`sk` needs two things to work: your **SwiftKanban server URL** and a **JWT token**.
+### Quick start: Login
 
-### 1. Set your server URL
+The easiest way to get started is to log in with your SwiftKanban credentials:
 
 ```bash
-sk config set server https://your-instance.swiftkanban.com
+sk login --user you@example.com --password yourpassword
 ```
 
-### 2. Set your auth token
+This authenticates against the SwiftKanban API and stores the JWT token in your config file. Your account must have the **Integration User** role — contact your SwiftKanban admin if login fails with a permissions error.
+
+You can also store credentials in config so `sk login` works without flags:
+
+```bash
+sk config set user you@example.com
+sk config set password yourpassword
+sk login
+```
+
+### Manual token setup
+
+If you already have a JWT token:
 
 ```bash
 sk config set token eyJhbGciOiJIUz...
 ```
 
-### Alternative: Environment variables
+### Server URL
+
+The default server is `https://login.swiftkanban.com`. To use a different instance:
+
+```bash
+sk config set server https://your-instance.swiftkanban.com
+```
+
+### Environment variables
 
 ```bash
 export SK_SERVER=https://your-instance.swiftkanban.com
 export SK_TOKEN=eyJhbGciOiJIUz...
 export SK_BOARD_ID=BOARD-123   # optional default board
+export SK_USER=you@example.com
+export SK_PASSWORD=yourpassword
 ```
 
-### Alternative: CLI flags
+### CLI flags
 
 ```bash
 sk --server https://your-instance.swiftkanban.com --token eyJ... boards list
@@ -64,6 +86,16 @@ sk config show
 ```
 
 ## Usage
+
+### Login
+
+```bash
+# Login with flags
+sk login --user you@example.com --password yourpassword
+
+# Login using stored/env credentials
+sk login
+```
 
 ### Boards
 
