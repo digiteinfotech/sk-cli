@@ -1,9 +1,9 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
-  "name": "io.github.digiteinfotech/swiftkanban",
+  "name": "io.github.deenaik/swiftkanban",
   "title": "SwiftKanban",
-  "description": "Manage SwiftKanban boards and cards from Claude AI. List boards, create/update/delete cards, and more.",
-  "version": "0.1.3",
+  "description": "Manage SwiftKanban boards and cards from Claude AI",
+  "version": "0.1.5",
   "packages": [
     {
       "registryType": "npm",

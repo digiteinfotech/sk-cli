@@ -1,8 +1,8 @@
 {
   "name": "@nimblework/sk-cli",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "SwiftKanban CLI and MCP server — interact with SwiftKanban from the command line or Claude AI",
-  "mcpName": "io.github.digiteinfotech/swiftkanban",
+  "mcpName": "io.github.deenaik/swiftkanban",
   "repository": {
     "type": "git",
     "url": "https://github.com/digiteinfotech/sk-cli.git"
