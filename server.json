@@ -1,0 +1,13 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.digiteinfotech/swiftkanban",
+  "title": "SwiftKanban",
+  "description": "Manage SwiftKanban boards and cards from Claude AI. List boards, create/update/delete cards, and more.",
+  "version": "0.1.3",
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "@nimblework/sk-cli"
+    }
+  ]
+}
