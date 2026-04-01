@@ -1,0 +1,41 @@
+{
+  "name": "sk-cli",
+  "version": "0.1.0",
+  "description": "SwiftKanban CLI — interact with SwiftKanban from the command line",
+  "type": "module",
+  "bin": {
+    "sk": "./dist/sk.js"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsx bin/sk.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:integration": "SK_INTEGRATION_TEST=1 vitest run test/integration",
+    "lint": "eslint src/ bin/ test/",
+    "typecheck": "tsc --noEmit"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "keywords": [
+    "swiftkanban",
+    "kanban",
+    "cli"
+  ],
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "cli-table3": "^0.6.5",
+    "commander": "^14.0.3",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@types/node": "^25.5.0",
+    "msw": "^2.12.14",
+    "tsup": "^8.5.1",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.2",
+    "vitest": "^4.1.2"
+  }
+}
