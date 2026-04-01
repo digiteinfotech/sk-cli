@@ -5,7 +5,7 @@ A command-line interface and [MCP server](https://modelcontextprotocol.io/) for 
 ## Installation
 
 ```bash
-npm install -g sk-cli
+npm install -g @nimblework/sk-cli
 ```
 
 Or from source:
@@ -103,37 +103,39 @@ sk boards get BOARD-123
 
 ### Cards
 
+Card IDs use the `CardCode:numericId` format (e.g., `UserStory:679602`). The `workType` and `id` fields from card list output combine to form this.
+
 ```bash
 # List cards on a board
-sk cards --board-id BOARD-123 list
+sk cards --board-id 1582582 list
 
-# Get card details
-sk cards --board-id BOARD-123 get CARD-456
+# Get card details (CardCode:id format)
+sk cards --board-id 1582582 get UserStory:679602
 
 # Create a card
-sk cards --board-id BOARD-123 create --title "Fix login bug" --description "Users can't log in on Safari"
+sk cards --board-id 1582582 create --name "Fix login bug" --description "Users can't log in on Safari"
 
 # Create a card with full JSON payload
-sk cards --board-id BOARD-123 create --json '{"title": "New feature", "description": "Add dark mode", "columnId": "TODO"}'
+sk cards --board-id 1582582 create --json '{"name": "New feature", "description": "Add dark mode"}'
 
 # Update a card
-sk cards --board-id BOARD-123 update CARD-456 --title "Updated title"
+sk cards --board-id 1582582 update UserStory:679602 --name "Updated name"
 
 # Update a card with JSON
-sk cards --board-id BOARD-123 update CARD-456 --json '{"title": "New title", "description": "New desc"}'
+sk cards --board-id 1582582 update UserStory:679602 --json '{"name": "New name", "description": "New desc"}'
 
 # Delete a card
-sk cards --board-id BOARD-123 delete CARD-456
+sk cards --board-id 1582582 delete UserStory:679602
 ```
 
 **Tip:** Set a default board to avoid passing `--board-id` every time:
 
 ```bash
-sk config set defaultBoardId BOARD-123
+sk config set defaultBoardId 1582582
 
 # Now these work without --board-id
 sk cards list
-sk cards create --title "Quick card"
+sk cards create --name "Quick card"
 ```
 
 ### Config
@@ -196,12 +198,12 @@ sk --format table boards list
 ```
 
 ```
-┌──────────┬─────────────────┬─────────────┐
-│ ID       │ Name            │ Description │
-├──────────┼─────────────────┼─────────────┤
-│ BOARD-1  │ Engineering     │ Dev board   │
-│ BOARD-2  │ Marketing       │             │
-└──────────┴─────────────────┴─────────────┘
+┌──────────┬─────────────────┬────────┐
+│ Board ID │ Name            │ State  │
+├──────────┼─────────────────┼────────┤
+│ 1570749  │ Engineering     │ Active │
+│ 1571422  │ Marketing       │ Active │
+└──────────┴─────────────────┴────────┘
 ```
 
 Set table as default:
@@ -259,7 +261,7 @@ Or without global install:
   "mcpServers": {
     "swiftkanban": {
       "command": "npx",
-      "args": ["-y", "sk-cli", "sk-mcp"],
+      "args": ["-y", "@nimblework/sk-cli", "sk-mcp"],
       "env": {
         "SK_TOKEN": "your-jwt-token"
       }

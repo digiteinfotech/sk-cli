@@ -1,11 +1,11 @@
 {
-  "name": "sk-cli",
+  "name": "@nimblework/sk-cli",
   "version": "0.1.0",
   "description": "SwiftKanban CLI and MCP server — interact with SwiftKanban from the command line or Claude AI",
   "type": "module",
   "bin": {
-    "sk": "./dist/sk.js",
-    "sk-mcp": "./dist/sk-mcp.js"
+    "sk": "dist/sk.js",
+    "sk-mcp": "dist/sk-mcp.js"
   },
   "files": [
     "dist",
@@ -35,6 +35,9 @@
     "model-context-protocol"
   ],
   "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.29.0",
     "cli-table3": "^0.6.5",

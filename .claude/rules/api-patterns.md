@@ -19,14 +19,27 @@ Login is handled by `src/services/auth.ts`, invoked via `sk login`:
 - Response JWT at: `response.Response.details.authDetails.AuthorizationToken`
 - Requires "Integration User" role on the SwiftKanban account
 
+## Response Envelope
+
+All SwiftKanban responses are wrapped in `Response.details`. Services unwrap this:
+
+```typescript
+const raw = await client.get<SkResponse>('/restapi/...')
+const parsed = skResponseSchema.parse(raw)
+const data = parsed.Response.details.someKey // boards: "board", cards: "cardDetails"
+```
+
+Check `parsed.Response.messageView.type === 'error'` for API-level errors that return HTTP 200.
+
 ## Adding a New Endpoint
 
 1. Add request/response types in `src/api/types.ts`
-2. Add service function in `src/services/<resource>.ts`
+2. Add service function in `src/services/<resource>.ts` (unwrap `Response.details` envelope)
 3. Add CLI command in `src/cli/<resource>.ts`
 4. Register command in `src/cli/index.ts`
-5. Add test fixtures in `test/fixtures/`
-6. Add unit tests
+5. Add MCP tool in `bin/sk-mcp.ts` (wrap service call with error handling)
+6. Add test fixtures in `test/fixtures/`
+7. Add unit tests
 
 ## JSON Envelope
 
