@@ -35,7 +35,7 @@ function requireBoardId(boardId: string | undefined, defaultBoardId: string | un
 export function createMcpServer() {
   const server = new McpServer({
     name: 'sk-swiftkanban',
-    version: '0.1.0',
+    version: '0.1.2',
   })
 
   server.registerTool(
