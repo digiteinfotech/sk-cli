@@ -1,6 +1,7 @@
 # sk — SwiftKanban CLI & MCP Server
 
 A command-line interface and [MCP server](https://modelcontextprotocol.io/) for [SwiftKanban](https://www.nimblework.com/products/swiftkanban/). Manage boards, cards, and more from your terminal or through Claude AI.
+[![SwiftKanban MCP server](https://mcprush.com/badge/swiftkanban-mcp/card.svg)](https://mcprush.com/to/swiftkanban-mcp?ref=badge)
 
 ## Installation
 
